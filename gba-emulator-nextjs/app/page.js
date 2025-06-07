@@ -1,53 +1,47 @@
-// app/page.js (or pages/index.js)
-'use client'; // Required for useState, useEffect in App Router
-
+"use client";
 import React, { useState } from 'react';
 import EmulatorDisplay from '../components/EmulatorDisplay';
-import GameControls from '../components/GameControls';
-import CheatInterface from '../components/CheatInterface';
 
-export default function HomePage() {
-  const [currentRom, setCurrentRom] = useState(null);
+export default function Home() {
+  const [romFile, setRomFile] = useState(null);
 
-  const handleRomLoad = (romFile) => {
-    setCurrentRom(romFile);
-    console.log('ROM selected:', romFile.name);
-  };
-
-  const handlePause = () => {
-    // TODO: Implement pause/resume logic with the emulator
-    console.log('Pause/Resume clicked');
-  };
-
-  const handleReset = () => {
-    // TODO: Implement reset logic with the emulator
-    console.log('Reset clicked');
-    // Potentially setCurrentRom(null) or reload the current ROM
-  };
-
-  const handleApplyCheat = (cheats) => {
-    // TODO: Pass cheat data to the emulator instance
-    console.log('Cheats to apply in main page:', cheats);
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      console.log('File selected:', file.name, 'Size:', file.size);
+      setRomFile(file);
+    } else {
+      setRomFile(null);
+    }
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>GBA Emulator with Next.JS</h1>
-      <GameControls 
-        onRomLoad={handleRomLoad} 
-        onPause={handlePause} 
-        onReset={handleReset} 
-      />
-      <hr style={{ margin: '20px 0' }} />
-      {currentRom ? (
-        <EmulatorDisplay romFile={currentRom} />
-      ) : (
-        <p>Please select a GBA ROM file to start.</p>
-      )}
-      <hr style={{ margin: '20px 0' }} />
-      {currentRom && (
-        <CheatInterface onApplyCheat={handleApplyCheat} />
-      )}
-    </div>
+    <main style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      gap: '20px',
+      padding: '20px',
+      minHeight: '100vh'
+    }}>
+      <h1>GameBoy Emulator</h1>
+      <p style={{ textAlign: 'center', maxWidth: '600px' }}>
+        This emulator supports <strong>GameBoy (.gb)</strong> and <strong>GameBoy Color (.gbc)</strong> ROMs only.
+        <br />Note: This does NOT support GBA (Game Boy Advance) ROMs.
+      </p>
+      
+      <div className="file-input">
+        <label htmlFor="rom-upload">Load GameBoy ROM:</label>
+        <input
+          type="file"
+          id="rom-upload"
+          accept=".gb,.gbc"
+          onChange={handleFileChange}
+          style={{ marginLeft: '10px' }}
+        />
+      </div>
+      
+      <EmulatorDisplay romFile={romFile} />
+    </main>
   );
 }

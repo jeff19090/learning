@@ -20,4 +20,4 @@ const GameControls = ({ onRomLoad, onPause, onReset }) => {
   );
 };
 
-export default GameControls;
+export default GameControls; // Ensure only one export
